@@ -86,6 +86,7 @@ public class User implements Serializable {
 
    private final @Getter String username;
    private @Getter @Setter LinkedList<Card> cards;
+   private @Getter @Setter int balance;
 
    private @Getter String ipAddress;
 
@@ -93,6 +94,7 @@ public class User implements Serializable {
       this.username = username;
       this.ipAddress = ipAddress;
       this.cards = new LinkedList<>();
+      this.balance = 0;
    }
 
    @Override

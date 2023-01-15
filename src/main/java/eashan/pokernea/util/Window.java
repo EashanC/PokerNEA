@@ -51,9 +51,9 @@ public class Window {
       return label;
    }
 
-   public Label createLabel(String string, int size) {
+   public Label createLabel(String string, int fontSize) {
       Label label = new Label(string);
-      label.setFont(Font.font("Leelawadee", FontWeight.BOLD, size));
+      label.setFont(Font.font("Leelawadee", FontWeight.BOLD, fontSize));
       return label;
    }
 
@@ -124,6 +124,14 @@ public class Window {
       Button button = new Button(text);
       button.setFont(font);
       button.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+      button.setMinSize(width, height);
+      return button;
+   }
+
+   public Button createGameButtonC(String text, int width, int height) {
+      Button button = new Button(text);
+      button.setFont(font);
+      button.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: default;");
       button.setMinSize(width, height);
       return button;
    }

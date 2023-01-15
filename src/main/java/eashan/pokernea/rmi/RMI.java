@@ -23,4 +23,6 @@ public interface RMI extends Remote {
    Room getRoom(String code) throws RemoteException;
    void leaveRoom(String code, User user) throws RemoteException;
    int checkUserCount(String text) throws RemoteException;
+   int getBalance(String username) throws RemoteException;
+   int getPot() throws RemoteException;
 }

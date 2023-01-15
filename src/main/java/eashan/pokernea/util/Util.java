@@ -4,8 +4,10 @@ import eashan.pokernea.card.Card;
 import eashan.pokernea.card.CardSet;
 import eashan.pokernea.card.CardSuit;
 import eashan.pokernea.card.CardType;
-import eashan.pokernea.room.Game;
 import eashan.pokernea.database.User;
+import eashan.pokernea.room.Game;
+import eashan.pokernea.room.Move;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -86,5 +88,7 @@ public class Util {
 
    public static @Getter @Setter HBox userCards;
    public static @Getter @Setter Game game;
+   public static @Getter @Setter Move selected = null;
+   public static @Getter @Setter Button label;
 
 }

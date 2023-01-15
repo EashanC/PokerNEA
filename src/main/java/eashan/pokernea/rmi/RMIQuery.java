@@ -4,6 +4,12 @@ import eashan.pokernea.PokerServer;
 import eashan.pokernea.database.User;
 import eashan.pokernea.room.Room;
 import eashan.pokernea.util.SQL;
+import eashan.pokernea.util.Util;
+import javafx.application.Platform;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -25,6 +31,19 @@ public class RMIQuery extends UnicastRemoteObject implements RMI {
    }
 
    public void sendChat(String chat) throws RemoteException {
+      int x=0;
+      for (ClientRMI rmi : Util.getGame().rmis) {
+         rmi.sendChat(chat);
+         System.out.println(x);
+         x++;
+      }
+      Platform.runLater(() -> {
+         BorderPane pane = (BorderPane) Util.getStage().getScene().getRoot();
+         HBox bottom = (HBox) pane.getBottom();
+         VBox chatArea = (VBox) bottom.getChildren().get(0);
+         ListView listView = (ListView) chatArea.getChildren().get(0);
+         listView.getItems().add(chat);
+      });
    }
 
    public boolean addUser(String roomCode, User user) throws RemoteException {
@@ -55,5 +74,17 @@ public class RMIQuery extends UnicastRemoteObject implements RMI {
       return getRoom(text).getUsers().size();
    }
 
+   public int getBalance(String username) throws RemoteException {
+      for (User user : Util.getGame().getUsers()) {
+         if (user.getUsername().equalsIgnoreCase(username)) {
+            return user.getBalance();
+         }
+      }
+      return 0;
+   }
+
+   public int getPot() throws RemoteException {
+      return Util.getGame().getPot();
+   }
 
 }

@@ -130,6 +130,11 @@ public class Calculations {
                 new Card(CardSuit.CLOVE, CardType.KING));
     }**/
 
+    public static boolean compareHands(int ranking, LinkedList<Card> cards1, LinkedList<Card> cards2) {
+        // Use ranking with a switch statement to get the right method and then compare - should be relatively easy
+        return true; // TRUE = 1, FALSE = 2;
+    }
+
     public int calculateHandRanking() {
         if (isRoyalFlush()) return 1;
         else if (isStraightFlush()) return 2;
