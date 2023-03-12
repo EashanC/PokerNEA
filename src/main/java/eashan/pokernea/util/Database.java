@@ -30,8 +30,8 @@ public class Database {
       String url = "jdbc:sqlite:Database.db";
       connect(url);
       update("CREATE TABLE IF NOT EXISTS login (userID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)");
-      update("CREATE TABLE IF NOT EXISTS game (gameID INTEGER PRIMARY KEY AUTOINCREMENT, length TEXT, date TEXT, numberPlayers INTEGER)");
-      update("CREATE TABLE IF NOT EXISTS userStats (userID INTEGER NOT NULL, gameID INTEGER NOT NULL, moneyBet DOUBLE, moneyEnd DOUBLE, won BOOLEAN, hadRoyalFlush BOOLEAN, PRIMARY KEY (userID, gameID))");
+      update("CREATE TABLE IF NOT EXISTS game (gameID INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, date TEXT, numberPlayers INTEGER)");
+      update("CREATE TABLE IF NOT EXISTS userStats (userID INTEGER NOT NULL, gameID INTEGER NOT NULL, moneyBet INTEGER, won BOOLEAN, hadRoyalFlush BOOLEAN, PRIMARY KEY (userID, gameID))");
    }
 
    public void update(String sql) {

@@ -1,6 +1,7 @@
 package eashan.pokernea.windows;
 
 import eashan.pokernea.PokerServer;
+import eashan.pokernea.rmi.ClientRMI;
 import eashan.pokernea.rmi.RMI;
 import eashan.pokernea.room.Move;
 import eashan.pokernea.room.Room;
@@ -17,16 +18,13 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
 import java.rmi.Naming;
-import java.rmi.RemoteException;
 
 public class GameWindow {
 
-   /**
-    * Max height of 'bottom is 150!'
-    */
-   public Scene getScene(Room room, int order, int ante, int balance) {
-      BorderPane content = new BorderPane();
+   public Scene getScene(Room room, int order, int ante, int balance) throws Exception {
+      RMI rmi = (RMI) Naming.lookup("rmi://" + PokerServer.getIpAddress() + ":8089/poker");
 
+      BorderPane content = new BorderPane();
       Scene scene = new Scene(content, 1280, 920);
 
       Background background = new Background(
@@ -61,7 +59,6 @@ public class GameWindow {
       button.setStyle("-fx-background-radius: 0px;");
       button.setOnAction(e -> {
          try {
-            RMI rmi = (RMI) Naming.lookup("rmi://" + PokerServer.getIpAddress() + ":8089/poker");
             rmi.sendChat(Util.getUser().getUsername() + ": " + area.getText());
             area.clear();
          } catch (Exception f) {
@@ -82,38 +79,6 @@ public class GameWindow {
       Button raise = window.createGameButton("RAISE £" + ante*2, 120, 50);
       horizontalButtons2.getChildren().addAll(call, raise);
 
-      fold.setOnAction(e -> {
-         check.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         call.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         raise.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         fold.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
-         Util.setSelected(Move.FOLD);
-      });
-
-      call.setOnAction(e -> {
-         check.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         fold.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         raise.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         call.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
-         Util.setSelected(Move.BET);
-      });
-
-      raise.setOnAction(e -> {
-         check.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         fold.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         call.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         raise.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
-         Util.setSelected(Move.RAISE);
-      });
-
-      check.setOnAction(e -> {
-         raise.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         fold.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         call.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
-         check.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
-         Util.setSelected(Move.CHECK);
-      });
-
       Slider slider = new Slider(ante*2, balance, ante*2);
       slider.setShowTickMarks(true);
       slider.setShowTickLabels(true);
@@ -126,6 +91,62 @@ public class GameWindow {
 
       buttons.getChildren().addAll(horizontalButtons1, horizontalButtons2, slider);
 
+      fold.setOnAction(e -> {
+         if (Util.isGo() && Util.isHasChecked()) {
+            check.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            call.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            raise.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            fold.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
+            try {
+               rmi.setMove(Util.getUser().getUsername(), Move.FOLD, 0);
+            } catch (Exception ex) {
+               ex.printStackTrace();
+            }
+         }
+      });
+
+      call.setOnAction(e -> {
+         if (Util.isGo()) {
+            check.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            fold.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            raise.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            call.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
+            try {
+               rmi.setMove(Util.getUser().getUsername(), Move.BET, 0);
+            } catch (Exception ex) {
+               ex.printStackTrace();
+            }
+         }
+      });
+
+      raise.setOnAction(e -> {
+         if (Util.isGo() && Util.isHasChecked()) {
+            check.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            fold.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            call.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            raise.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
+            try {
+               rmi.setMove(Util.getUser().getUsername(), Move.RAISE, (int) slider.getValue());
+            } catch (Exception ex) {
+               ex.printStackTrace();
+            }
+         }
+      });
+
+      check.setOnAction(e -> {
+         if (Util.isGo() && !Util.isHasChecked()) {
+            raise.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            fold.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            call.setStyle("-fx-background-color: #CB2622; -fx-text-fill: #FFFFFF; -fx-background-radius: 0px; -fx-cursor: hand;");
+            check.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: #CB2622; -fx-background-radius: 0px; -fx-cursor: hand;");
+            try {
+               rmi.setMove(Util.getUser().getUsername(), Move.CHECK, 0);
+            } catch (Exception ex) {
+               ex.printStackTrace();
+            }
+         }
+      });
+
       if (room.getUsers().size() == 3) {
          if (order == 2) {
             content.setLeft(room.getUsers().get(0).getShape(true, balance));
@@ -137,13 +158,28 @@ public class GameWindow {
          } else {
             content.setRight(room.getUsers().get(order-1).getShape(true, balance));
          }
-      } else if (room.getUsers().size() == 4) {
-         content.setLeft(room.getUsers().get(1).getShape(true, balance));
-         content.setTop(room.getUsers().get(2).getShape(false, balance));
-         content.setRight(room.getUsers().get(3).getShape(true, balance));
-      } else {
-         content.setRight(room.getUsers().get(0).getShape(false, balance));
-         content.setLeft(room.getUsers().get(0).getShape(false, balance));
+      } else if (room.getUsers().size() == 4) { // Order = index in list
+         // O: L-1 C-2 R-3
+         // 1: L-2 C-3 R-0
+         // 2: L-3 C-0 R-1
+         // 3: L-0 C-1 R-2
+         if (order == 0) {
+            content.setLeft(room.getUsers().get(1).getShape(true, balance));
+            content.setTop(room.getUsers().get(2).getShape(false, balance));
+            content.setRight(room.getUsers().get(3).getShape(true, balance));
+         } else if (order == 1) {
+            content.setLeft(room.getUsers().get(2).getShape(true, balance));
+            content.setTop(room.getUsers().get(3).getShape(false, balance));
+            content.setRight(room.getUsers().get(0).getShape(true, balance));
+         } else if (order == 2) {
+            content.setLeft(room.getUsers().get(3).getShape(true, balance));
+            content.setTop(room.getUsers().get(0).getShape(false, balance));
+            content.setRight(room.getUsers().get(1).getShape(true, balance));
+         } else if (order == 3) {
+            content.setLeft(room.getUsers().get(0).getShape(true, balance));
+            content.setTop(room.getUsers().get(1).getShape(false, balance));
+            content.setRight(room.getUsers().get(2).getShape(true, balance));
+         }
       }
 
       chatArea.setAlignment(Pos.BOTTOM_CENTER);
@@ -159,31 +195,32 @@ public class GameWindow {
       Button label;
       if (!Util.isClient()) {
          label = window.createGameButton("Click to start drawing cards.", 400, 50);
+         Util.setLabel(label);
          label.setOnAction(f -> {
             Util.getGame().giveCards();
 
             label.setText("Click to add ante to the pot.");
             label.setOnAction(g -> {
                Util.getGame().addAnte();
-               Util.getGame().rmis.forEach(r -> {
+               Util.getGame().rmis.forEach((r, u) -> {
                   try {
                      r.editLabel("Added ante to the pot");
                   } catch (Exception e) {
                      e.printStackTrace();
                   }
                });
-               Util.getGame().rmis.forEach(r -> { // Has to be done afterwards
-                  try {
-                     r.update();
-                  } catch (RemoteException e) {
-                     e.printStackTrace();
+               try {
+                  for (ClientRMI clientRMI : Util.getGame().rmis.keySet()) {
+                     clientRMI.update(Util.getGame().rmis.get(rmi));
                   }
-               });
-               update(pot, content.getTop(), content.getLeft(), content.getRight());
+               } catch (Exception e) {
+                  e.printStackTrace();
+               }
+               update(pot, content.getTop(), content.getLeft(), content.getRight(), content.getBottom());
 
                label.setText("Start game");
                label.setOnAction(h -> {
-                  Util.getGame().startRound();
+                  Util.getGame().resetRound();
                });
             });
          });
@@ -200,7 +237,7 @@ public class GameWindow {
       return scene;
    }
 
-   private void update(Button pot, Node top, Node left, Node right) {
+   private void update(Button pot, Node top, Node left, Node right, Node bottom) {
       pot.setText("£" + Util.getGame().getPot());
       // Left user
       VBox leftShape = (VBox) left;
@@ -221,6 +258,12 @@ public class GameWindow {
          Label topMoney = (Label) topShape.getChildren().get(1);
          topMoney.setText("£" + Util.getGame().getUserFromName(topUsername).getBalance());
       }
+
+      // Slider
+      HBox bottomBox = (HBox) bottom;
+      VBox buttons = (VBox) bottomBox.getChildren().get(2);
+      Slider slider = (Slider) buttons.getChildren().get(2);
+      slider.setMax(Util.getUser().getBalance());
    }
 
 }

@@ -20,8 +20,8 @@ import java.rmi.registry.LocateRegistry;
 
 public class PokerServer extends Application {
 
-   private static final @Getter String ipAddress = "192.168.1.108";
-   //private static final @Getter String ipAddress = "192.168.0.10";
+   //private static final @Getter String ipAddress = "192.168.1.108";
+   private static final @Getter String ipAddress = "192.168.0.10";
 
    private static @Getter Database database;
    private static @Getter @Setter User user;

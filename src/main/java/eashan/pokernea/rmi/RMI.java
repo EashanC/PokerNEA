@@ -1,6 +1,7 @@
 package eashan.pokernea.rmi;
 
 import eashan.pokernea.database.User;
+import eashan.pokernea.room.Move;
 import eashan.pokernea.room.Room;
 import eashan.pokernea.util.SQL;
 
@@ -25,4 +26,5 @@ public interface RMI extends Remote {
    int checkUserCount(String text) throws RemoteException;
    int getBalance(String username) throws RemoteException;
    int getPot() throws RemoteException;
+   void setMove(String username, Move move, int raise) throws RemoteException;
 }

@@ -24,6 +24,10 @@ public class Room implements Serializable {
       this.users = new LinkedList<>();
    }
 
+   private void setupSQL() {
+
+   }
+
    public void addUser(User user) {
       users.add(user);
    }

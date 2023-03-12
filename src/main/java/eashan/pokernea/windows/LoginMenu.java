@@ -23,22 +23,9 @@ public class LoginMenu {
       Button create = window.createLabelButton("Create account");
       Label error = window.createErrorLabel(" ", Color.web("#FF0000"));
 
-      /*login.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-         if (e.getCode() == KeyCode.ENTER) {
-            login.fire();
-            e.consume();
-         }
-      });*/
       login.setDefaultButton(true); // same functionality as above
 
       login.setOnAction(e -> {
-         // Temporary for testing
-         if (username.getText().equals("") && password.getText().equals("")) {
-            User user = new User(Util.getIpAddress(), Util.generateRoomCode());
-            Util.setUser(user);
-            Util.getStage().setScene(new ChoiceMenu().getScene());
-         }
-
          error.setTextFill(Color.web("#FFFFFF"));
          boolean canLogin = User.checkLogin(username.getText(), Util.hash(password.getText()));
          if (canLogin) {

@@ -2,6 +2,7 @@ package eashan.pokernea.rmi;
 
 import eashan.pokernea.PokerServer;
 import eashan.pokernea.database.User;
+import eashan.pokernea.room.Move;
 import eashan.pokernea.room.Room;
 import eashan.pokernea.util.SQL;
 import eashan.pokernea.util.Util;
@@ -32,7 +33,7 @@ public class RMIQuery extends UnicastRemoteObject implements RMI {
 
    public void sendChat(String chat) throws RemoteException {
       int x=0;
-      for (ClientRMI rmi : Util.getGame().rmis) {
+      for (ClientRMI rmi : Util.getGame().rmis.keySet()) {
          rmi.sendChat(chat);
          System.out.println(x);
          x++;
@@ -77,6 +78,7 @@ public class RMIQuery extends UnicastRemoteObject implements RMI {
    public int getBalance(String username) throws RemoteException {
       for (User user : Util.getGame().getUsers()) {
          if (user.getUsername().equalsIgnoreCase(username)) {
+            System.out.println(user.getBalance());
             return user.getBalance();
          }
       }
@@ -85,6 +87,14 @@ public class RMIQuery extends UnicastRemoteObject implements RMI {
 
    public int getPot() throws RemoteException {
       return Util.getGame().getPot();
+   }
+
+   public void setMove(String username, Move move, int raise) throws RemoteException {
+      if (Util.getGame().getCurrentUser().equals(username)) {
+         Platform.runLater(() -> Util.getGame().setMove(move, raise));
+      }
+
+      // Change labels
    }
 
 }

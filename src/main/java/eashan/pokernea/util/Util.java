@@ -86,9 +86,11 @@ public class Util {
       return "";
    }
 
-   public static @Getter @Setter HBox userCards;
-   public static @Getter @Setter Game game;
-   public static @Getter @Setter Move selected = null;
-   public static @Getter @Setter Button label;
+   private static @Getter @Setter HBox userCards;
+   private static @Getter @Setter Game game;
+   private static @Getter @Setter Move selected = null;
+   private static @Getter @Setter Button label;
+   private static @Getter @Setter boolean hasChecked = false;
+   private static @Getter @Setter boolean isGo = false;
 
 }

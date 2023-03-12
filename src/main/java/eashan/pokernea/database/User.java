@@ -95,6 +95,7 @@ public class User implements Serializable {
       this.ipAddress = ipAddress;
       this.cards = new LinkedList<>();
       this.balance = 0;
+      this.raisedCards = new boolean[5];
    }
 
    @Override
@@ -142,5 +143,7 @@ public class User implements Serializable {
       box.setPadding(new Insets(25));
       return box;
    }
+
+   public boolean[] raisedCards;
 
 }

@@ -25,7 +25,7 @@ public class Window {
 
       // Main background
       Background background = new Background(
-            new BackgroundImage(new Image("https://as1.ftcdn.net/v2/jpg/01/24/53/40/1000_F_124534065_ww9OXMx183M5wQ85WNQ0rnLyXvsQMg19.jpg"),
+            new BackgroundImage(new Image("file:bg.jpg"),
                   BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
                   new BackgroundPosition(Side.LEFT, 0, true, Side.BOTTOM, 0, true),
                   new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, true, true, false, true))

@@ -21,6 +21,10 @@ public record Card(@Getter CardSuit suit, @Getter CardType type) implements Seri
       return "file:cards/" + suit.toString().toLowerCase() + "-" + type.name().toLowerCase() + ".jpg";
    }
 
+   public int getOrder() {
+      return type.getOrder();
+   }
+
    public VBox getShape(double width, double height) {
       AtomicBoolean isRaised = new AtomicBoolean(false);
       VBox box = new VBox();

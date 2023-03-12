@@ -21,7 +21,7 @@ public class SQL {
       UPDATE;
    }
 
-   public static ResultSet send(Level level, String sql) throws SQLException {
+   public static ResultSet send(Level level, String sql) {
       if (level == Level.EXECUTE) {
          return PokerServer.getDatabase().execute(sql);
       } else if (level == Level.UPDATE) {

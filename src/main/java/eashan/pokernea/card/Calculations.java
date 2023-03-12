@@ -130,9 +130,96 @@ public class Calculations {
                 new Card(CardSuit.CLOVE, CardType.KING));
     }**/
 
-    public static boolean compareHands(int ranking, LinkedList<Card> cards1, LinkedList<Card> cards2) {
-        // Use ranking with a switch statement to get the right method and then compare - should be relatively easy
-        return true; // TRUE = 1, FALSE = 2;
+    public static int compareHands(int ranking, LinkedList<Card> cards1, LinkedList<Card> cards2) {
+        // 0 = draw, 1 = user1, 2 = user2
+        List<Integer> ints1 = list(cards1), ints2 = list(cards2); // is in the same order as CardType
+        switch (ranking) {
+            case 1 -> {
+                return 0; // Split pot
+            }
+            case 2 -> {
+                if (cards1.getLast().getOrder() > cards2.getLast().getOrder()) {
+                    return 1;
+                } else if (cards2.getLast().getOrder() > cards1.getLast().getOrder()) {
+                    return 2;
+                } else {
+                    return 0; // they must have the exact same order but different suits so draw
+                }
+            }
+            case 3 -> {
+                if (ints1.indexOf(4) > ints2.indexOf(4)) {
+                    return 1;
+                } else if (ints2.indexOf(4) > ints1.indexOf(4)) {
+                    return 2;
+                } else {
+                    return 0;
+                }
+            }
+            case 4, 7 -> {
+                if (ints1.indexOf(3) > ints2.indexOf(3)) { // Can't have the same three cards
+                    return 1;
+                } else if (ints2.indexOf(3) > ints1.indexOf(3)) {
+                    return 2;
+                } else {
+                    return 0;
+                }
+            }
+            case 6 -> {
+                if (cards1.get(0).getOrder() > cards2.get(0).getOrder()) {
+                    return 1;
+                } else if (cards2.get(0).getOrder() > cards1.get(0).getOrder()) {
+                    return 2;
+                } else {
+                    return 0;
+                }
+            }
+            case 8 -> {
+                if (ints1.lastIndexOf(2) > ints2.lastIndexOf(2)) {
+                    return 1;
+                } else if (ints2.lastIndexOf(2) > ints1.lastIndexOf(2)) {
+                    return 2;
+                } else {
+                    if (ints1.indexOf(2) > ints2.indexOf(2)) {
+                        return 1;
+                    } else if (ints2.indexOf(2) > ints1.indexOf(2)) {
+                        return 2;
+                    } else {
+                        if (ints1.indexOf(1) > ints2.indexOf(1)) {
+                            return 1;
+                        } else if (ints2.indexOf(1) > ints1.indexOf(1)) {
+                            return 2;
+                        } else {
+                            return 0;
+                        }
+                    }
+                }
+            }
+            case 9 -> {
+                if (ints1.indexOf(2) > ints2.indexOf(2)) {
+                    return 1;
+                } else if (ints2.indexOf(2) > ints1.indexOf(2)) {
+                    return 2;
+                } else {
+                    return 0; // TODO find a method to go through 3 other cards, potential limitation?
+                }
+            }
+            default -> { // 5 and 10
+                int index = 0;
+                while (true) {
+                    try {
+                        if (cards1.get(index).getOrder() > cards2.get(index).getOrder()) {
+                            return 1;
+                        } else if (cards2.get(index).getOrder() > cards1.get(index).getOrder()) {
+                            return 2;
+                        } else {
+                            index++;
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        return 0; // Means they have the exact same cards in different suit
+                    }
+                }
+            }
+        }
     }
 
     public int calculateHandRanking() {
@@ -222,7 +309,7 @@ public class Calculations {
         return ints.contains(2);
     }
 
-    List<Integer> list() {
+    private List<Integer> list() {
         int two = 0;
         int three = 0;
         int four = 0;
@@ -237,6 +324,38 @@ public class Calculations {
         int king = 0;
         int ace = 0;
         for (Card card : cards) {
+            if (card.getType() == CardType.TWO) two++;
+            if (card.getType() == CardType.THREE) three++;
+            if (card.getType() == CardType.FOUR) four++;
+            if (card.getType() == CardType.FIVE) five++;
+            if (card.getType() == CardType.SIX) six++;
+            if (card.getType() == CardType.SEVEN) seven++;
+            if (card.getType() == CardType.EIGHT) eight++;
+            if (card.getType() == CardType.NINE) nine++;
+            if (card.getType() == CardType.TEN) ten++;
+            if (card.getType() == CardType.JACK) jack++;
+            if (card.getType() == CardType.QUEEN) queen++;
+            if (card.getType() == CardType.KING) king++;
+            if (card.getType() == CardType.ACE) ace++;
+        }
+        return Arrays.asList(two, three, four, five, six, seven, eight, nine, ten, jack, queen, king, ace);
+    }
+
+    private static List<Integer> list(LinkedList<Card> cardList) {
+        int two = 0;
+        int three = 0;
+        int four = 0;
+        int five = 0;
+        int six = 0;
+        int seven = 0;
+        int eight = 0;
+        int nine = 0;
+        int ten = 0;
+        int jack = 0;
+        int queen = 0;
+        int king = 0;
+        int ace = 0;
+        for (Card card : cardList) {
             if (card.getType() == CardType.TWO) two++;
             if (card.getType() == CardType.THREE) three++;
             if (card.getType() == CardType.FOUR) four++;
